@@ -4,8 +4,7 @@ let maxCalories = 0
 
 input.split('\n\n')
   .map(elfCalories => {
-    let total = 0
-    total = elfCalories.split('\n')
+    const total = elfCalories.split('\n')
       .map(calories => +calories)
       .reduce((total, calories) => total + calories)
     if (total > maxCalories) maxCalories = total
