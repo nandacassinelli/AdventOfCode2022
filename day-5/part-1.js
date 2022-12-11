@@ -4,12 +4,15 @@ const moveCrate = (cratesStacks, topIndexes, origin, destination) => {
   const crate = cratesStacks[topIndexes[origin - 1]][origin - 1]
   cratesStacks[topIndexes[origin - 1]][origin - 1] = ''
   topIndexes[origin - 1] += 1
-
-  if (cratesStacks[topIndexes[destination - 1]] === 0) {
+  
+  if (topIndexes[destination - 1] === 0) {
     const newTopLine = []
     cratesStacks[0].forEach(() => newTopLine.push(''))
     newTopLine[destination - 1] = crate
-    cratesStacks.unshif(newTopLine)
+    cratesStacks.unshift(newTopLine)
+    topIndexes[destination - 1] -= 1
+    topIndexes = topIndexes.map(index => index + 1)
+    
     return [cratesStacks, topIndexes]
   }
 
@@ -30,7 +33,6 @@ const getTopIndexes = (cratesStacks) => {
     for (let j = 0; j < cratesStacks[0].length; j += 1) {
       if (cratesStacks[i][j] !== '' && topIndexes[j] === '') {
         topIndexes[j] = i
-        j = cratesStacks[0].length
       }
     }
   }
@@ -45,19 +47,20 @@ lines.pop()
 let crates = lines.map(line => line.split(' '))
 let stacksTopIndexes = getTopIndexes(crates)
 
-console.log(crates, stacksTopIndexes)
-
 commands
   .split('\n')
   .map(command => command.split(' '))
   .map(command => {
-    console.log(command)
     for (let i = 1; i <= +command[1]; i += 1) {
       [crates, stacksTopIndexes] = moveCrate(crates, stacksTopIndexes, +command[3], +command[5])
-      console.log(crates, stacksTopIndexes)
     }
   })
 
+let index = 0
+const topCrates = stacksTopIndexes.map(topIndex => {
+  const crate = crates[topIndex][index]
+  index += 1
+  return crate[1]
+})
 
-
-// const result = moveCrate(crates, 2)
+console.log(topCrates.join(''))
